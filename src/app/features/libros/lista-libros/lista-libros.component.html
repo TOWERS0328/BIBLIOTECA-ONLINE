@@ -1,43 +1,90 @@
-<div class="libros-container">
+<div class="container py-4 biblioteca-bg">
 
-  <h1>Biblioteca</h1>
+  <h1 class="mb-4 titulo-biblioteca">
+    <i class="bi bi-book"></i> Biblioteca
+  </h1>
 
   <!-- BUSCADOR -->
-  <div class="buscador">
-    <input
-      type="text"
-      placeholder="Buscar libro por título..."
-      [(ngModel)]="busqueda"
-    >
+  <div class="row mb-4">
+    <div class="col-md-4">
+
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-search"></i>
+        </span>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar libro por título..."
+          [(ngModel)]="busqueda"
+        >
+      </div>
+
+    </div>
   </div>
 
-  <div class="libros-grid">
+  <div class="row g-4">
 
-    <div class="libro-card" *ngFor="let libro of libros">
+    <div class="col-md-4 col-lg-3" *ngFor="let libro of libros">
 
-      <h3>{{ libro.titulo }}</h3>
+      <div class="card libro-card h-100">
 
-      <p><strong>Autor:</strong> {{ libro.autor }}</p>
+        <!-- ESPACIO PARA IMAGEN -->
+        <div class="portada-libro"></div>
 
-      <p><strong>Editorial:</strong> {{ libro.editorial }}</p>
+        <div class="card-body">
 
-      <p><strong>Año:</strong> {{ libro.anio }}</p>
+          <h5 class="card-title">
+            <i class="bi bi-journal-bookmark"></i>
+            {{ libro.titulo }}
+          </h5>
 
-      <p class="categoria">
-        {{ libro.categoria }}
-      </p>
+          <p class="card-text mb-1">
+            <i class="bi bi-person"></i>
+            <strong>Autor:</strong> {{ libro.autor }}
+          </p>
 
-      <p class="disponible" *ngIf="libro.disponible">
-        Disponible
-      </p>
+          <p class="card-text mb-1">
+            <i class="bi bi-building"></i>
+            <strong>Editorial:</strong> {{ libro.editorial }}
+          </p>
 
-      <p class="no-disponible" *ngIf="!libro.disponible">
-        No disponible
-      </p>
+          <p class="card-text mb-2">
+            <i class="bi bi-calendar"></i>
+            <strong>Año:</strong> {{ libro.anio }}
+          </p>
 
-      <button [routerLink]="['/libros', libro.id]">
-        Ver detalle
-      </button>
+          <span class="categoria">
+            {{ libro.categoria }}
+          </span>
+
+          <p class="mt-2 disponible" *ngIf="libro.disponible">
+            <i class="bi bi-check-circle"></i>
+            Disponible
+          </p>
+
+          <p class="mt-2 no-disponible" *ngIf="!libro.disponible">
+            <i class="bi bi-x-circle"></i>
+            No disponible
+          </p>
+
+        </div>
+
+        <div class="card-footer bg-transparent border-0">
+
+          <button
+            class="btn btn-biblioteca w-100"
+            [routerLink]="['/libros', libro.id]">
+
+            <i class="bi bi-eye"></i>
+            Ver detalle
+
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
 

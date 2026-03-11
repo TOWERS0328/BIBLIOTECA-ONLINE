@@ -1,63 +1,64 @@
-.libros-container{
-  padding:40px;
+.biblioteca-bg{
+  background:#F5F1E8;
+  min-height:100vh;
 }
 
-h1{
-  margin-bottom:20px;
-}
-
-.buscador{
-  margin-bottom:30px;
-}
-
-.buscador input{
-  width:300px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-
-.libros-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
-  gap:20px;
+.titulo-biblioteca{
+  color:#2C3E50;
+  font-weight:700;
 }
 
 .libro-card{
-  background:white;
-  border-radius:10px;
-  padding:20px;
-  box-shadow:0 5px 10px rgba(0,0,0,0.1);
+  border:none;
+  border-radius:12px;
+  box-shadow:0 6px 12px rgba(0,0,0,0.08);
+  transition:all 0.2s;
 }
 
-.libro-card h3{
-  margin-bottom:10px;
+.libro-card:hover{
+  transform:translateY(-5px);
+}
+
+.card-title{
+  color:#6B4F4F;
+  font-weight:600;
+}
+
+.categoria{
+  background:#EAEAEA;
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:12px;
+  display:inline-block;
 }
 
 .disponible{
-  color:green;
-  font-weight:bold;
+  color:#2E7D32;
+  font-weight:600;
 }
 
 .no-disponible{
-  color:red;
-  font-weight:bold;
+  color:#C0392B;
+  font-weight:600;
 }
 
-button{
-  margin-top:10px;
-  padding:10px 15px;
-  border:none;
-  border-radius:8px;
-  background:#6b7280;
+.btn-biblioteca{
+  background:#6B4F4F;
   color:white;
-  cursor:pointer;
+  border:none;
 }
-.categoria{
+
+.btn-biblioteca:hover{
+  background:#5A3E3E;
+}
+
+i{
+  color:black;
+  margin-right:6px;
+}
+.portada-libro{
+  height:180px;
   background:#e5e7eb;
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:10px;
-  font-size:12px;
-  margin-top:5px;
+  border-top-left-radius:12px;
+  border-top-right-radius:12px;
 }

@@ -1,1 +1,170 @@
-<p>mis-reservas works!</p>
+<div class="container py-4">
+
+<h2 class="titulo">
+<i class="bi bi-bookmark"></i>
+Mis Reservas
+</h2>
+
+<div class="table-responsive">
+
+<table class="table table-hover">
+
+<thead>
+
+<tr>
+<th>Libro</th>
+<th>Fecha reserva</th>
+<th>Estado</th>
+<th>Detalle</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr *ngFor="let r of reservas">
+
+<td>
+<i class="bi bi-book"></i>
+{{ r.tituloLibro }}
+</td>
+
+<td>{{ r.fechaReserva }}</td>
+
+<td>
+
+<span *ngIf="r.estado === 'PENDIENTE'" class="badge bg-warning text-dark">
+<i class="bi bi-clock"></i>
+Pendiente
+</span>
+
+<span *ngIf="r.estado === 'CONFIRMADA'" class="badge bg-success">
+<i class="bi bi-check-circle"></i>
+Confirmada
+</span>
+
+<span *ngIf="r.estado === 'CANCELADA'" class="badge bg-danger">
+<i class="bi bi-x-circle"></i>
+Cancelada
+</span>
+
+</td>
+
+<td>
+
+<button
+class="btn btn-sm btn-biblioteca"
+data-bs-toggle="modal"
+data-bs-target="#modalReserva"
+(click)="verDetalle(r)"
+title="Ver detalle de la reserva"
+aria-label="Ver detalle de la reserva">
+
+<i class="bi bi-eye"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- MODAL DETALLE -->
+
+<div class="modal fade" id="modalReserva" tabindex="-1">
+
+<div class="modal-dialog modal-lg">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+<i class="bi bi-bookmark"></i>
+Detalle de la reserva
+</h5>
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="modal"
+aria-label="Cerrar"
+title="Cerrar">
+</button>
+
+</div>
+
+<div class="modal-body" *ngIf="reservaSeleccionada">
+
+<div class="row">
+
+<div class="col-md-4 text-center">
+
+<img
+src="assets/libros/default-book.png"
+class="img-fluid portada"
+alt="Portada del libro"
+title="Portada del libro">
+
+</div>
+
+<div class="col-md-8">
+
+<h4>{{ reservaSeleccionada?.tituloLibro }}</h4>
+
+<hr>
+
+<p>
+<strong>ID reserva:</strong>
+{{ reservaSeleccionada?.id }}
+</p>
+
+<p>
+<strong>ID usuario:</strong>
+{{ reservaSeleccionada?.usuarioId }}
+</p>
+
+<p>
+<strong>Fecha reserva:</strong>
+{{ reservaSeleccionada?.fechaReserva }}
+</p>
+
+<p>
+
+<strong>Estado:</strong>
+
+<span *ngIf="reservaSeleccionada?.estado === 'PENDIENTE'" class="text-warning">
+<i class="bi bi-clock"></i>
+Pendiente
+</span>
+
+<span *ngIf="reservaSeleccionada?.estado === 'CONFIRMADA'" class="text-success">
+<i class="bi bi-check-circle"></i>
+Confirmada
+</span>
+
+<span *ngIf="reservaSeleccionada?.estado === 'CANCELADA'" class="text-danger">
+<i class="bi bi-x-circle"></i>
+Cancelada
+</span>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

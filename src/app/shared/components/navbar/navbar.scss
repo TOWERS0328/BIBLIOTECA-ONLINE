@@ -1,0 +1,37 @@
+.navbar-biblioteca{
+  background: #5b4636; // café biblioteca
+  padding: 12px 0;
+}
+
+.navbar-brand{
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.navbar-brand i{
+  margin-right: 6px;
+}
+
+.nav-link{
+  color: white;
+  margin-right: 10px;
+  font-weight: 500;
+}
+
+.nav-link i{
+  margin-right: 5px;
+}
+
+.nav-link:hover{
+  color: #e6d3b3;
+}
+
+.dropdown-menu{
+  border-radius: 10px;
+  padding: 8px 0;
+}
+
+.dropdown-item i{
+  margin-right: 6px;
+}

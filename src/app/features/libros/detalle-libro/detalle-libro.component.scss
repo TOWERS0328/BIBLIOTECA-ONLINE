@@ -1,0 +1,46 @@
+.portada-libro{
+  height:300px;
+  background:#e5e7eb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+  border-radius:10px;
+  color:#6b7280;
+}
+
+.titulo-libro{
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+.categoria{
+  background:#e5e7eb;
+  padding:5px 12px;
+  border-radius:12px;
+  font-size:14px;
+}
+
+.disponible{
+  color:green;
+  font-weight:600;
+}
+
+.no-disponible{
+  color:red;
+  font-weight:600;
+}
+
+.descripcion{
+  color:#555;
+}
+
+.btn-biblioteca{
+  background:#6B4F4F;
+  color:white;
+  border:none;
+}
+
+.btn-biblioteca:hover{
+  background:#4a3630;
+}

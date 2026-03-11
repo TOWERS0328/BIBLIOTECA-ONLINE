@@ -1,0 +1,56 @@
+/* ===== DESKTOP GRANDE ===== */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* ===== LAPTOP / DESKTOP ===== */
+@media (max-width: 1200px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+/* ===== TABLETS ===== */
+@media (max-width: 992px) {
+  .titulo {
+    font-size: 1.6rem;
+  }
+
+  .foto-perfil {
+    width: 120px;
+  }
+}
+
+/* ===== TABLET PEQUEÑA ===== */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .foto-perfil {
+    width: 100px;
+    margin-bottom: 15px;
+  }
+
+  .card {
+    margin-bottom: 15px;
+  }
+}
+
+/* ===== CELULARES ===== */
+@media (max-width: 576px) {
+  .titulo {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

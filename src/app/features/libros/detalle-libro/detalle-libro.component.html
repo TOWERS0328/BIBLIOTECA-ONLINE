@@ -1,1 +1,91 @@
-<p>detalle-libro works!</p>
+<div class="container py-5">
+
+  <div class="row">
+
+    <!-- Imagen libro -->
+    <div class="col-md-4 text-center">
+
+      <div class="portada-libro">
+
+        <i class="bi bi-book"></i>
+
+      </div>
+
+    </div>
+
+    <!-- Información -->
+    <div class="col-md-8">
+
+      <h2 class="titulo-libro">
+
+        {{ libro.titulo }}
+
+      </h2>
+
+      <p>
+
+        <i class="bi bi-person"></i>
+        <strong>Autor:</strong> {{ libro.autor }}
+
+      </p>
+
+      <p>
+
+        <i class="bi bi-building"></i>
+        <strong>Editorial:</strong> {{ libro.editorial }}
+
+      </p>
+
+      <p>
+
+        <i class="bi bi-calendar"></i>
+        <strong>Año:</strong> {{ libro.anio }}
+
+      </p>
+
+      <p>
+
+        <strong>Categoría:</strong>
+
+        <span class="categoria">
+          {{ libro.categoria }}
+        </span>
+
+      </p>
+
+      <p *ngIf="libro.disponible" class="disponible">
+
+        <i class="bi bi-check-circle"></i>
+        Disponible
+
+      </p>
+
+      <p *ngIf="!libro.disponible" class="no-disponible">
+
+        <i class="bi bi-x-circle"></i>
+        No disponible
+
+      </p>
+
+      <hr>
+
+      <h5>Descripción</h5>
+
+      <p class="descripcion">
+
+        {{ libro.descripcion }}
+
+      </p>
+
+      <button class="btn btn-biblioteca mt-3">
+
+        <i class="bi bi-bookmark-plus"></i>
+        Reservar libro
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

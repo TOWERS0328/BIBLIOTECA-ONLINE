@@ -1,1 +1,165 @@
-<p>historial-prestamos works!</p>
+<div class="container py-4">
+
+<h2 class="titulo">
+<i class="bi bi-clock-history"></i>
+Historial de Préstamos
+</h2>
+
+<div class="table-responsive">
+
+<table class="table table-hover tabla-prestamos">
+
+<thead>
+
+<tr>
+<th>Libro</th>
+<th>Fecha préstamo</th>
+<th>Fecha devolución</th>
+<th>Estado</th>
+<th>Detalle</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr *ngFor="let p of prestamos">
+
+<td>
+
+<i class="bi bi-book"></i>
+{{p.tituloLibro}}
+
+</td>
+
+<td>{{p.fechaPrestamo}}</td>
+
+<td>{{p.fechaDevolucion}}</td>
+
+<td>
+
+<span *ngIf="p.devuelto" class="badge bg-success">
+Devuelto
+</span>
+
+<span *ngIf="!p.devuelto" class="badge bg-warning text-dark">
+Prestado
+</span>
+
+</td>
+
+<td>
+
+<button
+class="btn btn-sm btn-biblioteca"
+data-bs-toggle="modal"
+data-bs-target="#modalPrestamo"
+(click)="abrirDetalle(p)"
+title="Ver detalle del préstamo">
+
+<i class="bi bi-eye"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- MODAL DETALLE -->
+
+<div
+class="modal fade"
+id="modalPrestamo"
+tabindex="-1">
+
+<div class="modal-dialog modal-lg">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+
+<i class="bi bi-book"></i>
+Detalle del préstamo
+
+</h5>
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="modal"
+aria-label="Cerrar"
+title="Cerrar ventana">
+</button>
+
+</div>
+
+<div class="modal-body" *ngIf="prestamoSeleccionado">
+
+<div class="row">
+
+<div class="col-md-4 text-center">
+
+<img
+src="assets/libros/default-book.png"
+class="img-fluid portada"
+alt="Portada del libro">
+
+</div>
+
+<div class="col-md-8">
+
+<h4>{{prestamoSeleccionado.tituloLibro}}</h4>
+
+<hr>
+
+<p>
+<strong>ID préstamo:</strong>
+{{prestamoSeleccionado.id}}
+</p>
+
+<p>
+<strong>ID usuario:</strong>
+{{prestamoSeleccionado.usuarioId}}
+</p>
+
+<p>
+<strong>Fecha préstamo:</strong>
+{{prestamoSeleccionado.fechaPrestamo}}
+</p>
+
+<p>
+<strong>Fecha devolución:</strong>
+{{prestamoSeleccionado.fechaDevolucion}}
+</p>
+
+<p *ngIf="prestamoSeleccionado.devuelto" class="text-success">
+<i class="bi bi-check-circle"></i>
+Libro devuelto
+</p>
+
+<p *ngIf="!prestamoSeleccionado.devuelto" class="text-warning">
+<i class="bi bi-clock"></i>
+Libro en préstamo
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

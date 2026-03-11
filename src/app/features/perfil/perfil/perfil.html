@@ -1,0 +1,181 @@
+<div class="container py-4">
+
+<h2 class="titulo">
+<i class="bi bi-person-circle"></i>
+Mi Perfil
+</h2>
+
+<div class="row">
+
+<!-- FOTO PERFIL -->
+
+<div class="col-md-4 text-center">
+
+<img
+[src]="previewImagen || usuario?.imagen || 'assets/img/user.png'"
+class="foto-perfil"
+alt="Foto del usuario"
+title="Foto de perfil">
+
+<h4 class="mt-3">
+{{usuario?.nombre}} {{usuario?.apellido}}
+</h4>
+
+<span class="badge bg-primary">
+{{usuario?.rol}}
+</span>
+
+<div class="mt-3">
+
+<label class="btn btn-outline-primary btn-sm">
+
+<i class="bi bi-camera"></i>
+Cambiar foto
+
+<input
+type="file"
+accept="image/*"
+hidden
+(change)="seleccionarImagen($event)">
+
+</label>
+
+</div>
+
+</div>
+
+<!-- DATOS + CONTRASEÑA -->
+
+<div class="col-md-8">
+
+<!-- DATOS USUARIO -->
+
+<div class="card shadow-sm mb-3">
+
+<div class="card-header">
+Datos del usuario
+</div>
+
+<div class="card-body">
+
+<p>
+<strong>Usuario:</strong>
+{{usuario?.username}}
+</p>
+
+<p>
+<strong>Email:</strong>
+{{usuario?.email}}
+</p>
+
+<p>
+
+<strong>Estado:</strong>
+
+<span *ngIf="usuario?.estado === 'ACTIVO'" class="text-success">
+Activo
+</span>
+
+<span *ngIf="usuario?.estado === 'INACTIVO'" class="text-danger">
+Inactivo
+</span>
+
+</p>
+
+</div>
+
+</div>
+
+<!-- CAMBIAR CONTRASEÑA -->
+
+<div class="card shadow-sm">
+
+<div class="card-header">
+<i class="bi bi-key"></i>
+Cambiar contraseña
+</div>
+
+<div class="card-body">
+
+<form (ngSubmit)="cambiarPassword()">
+
+<!-- PASSWORD ACTUAL -->
+
+<div class="mb-3">
+
+<label for="passwordActual" class="form-label">
+Contraseña actual
+</label>
+
+<input
+id="passwordActual"
+type="password"
+class="form-control"
+[(ngModel)]="passwordActual"
+name="passwordActual"
+placeholder="Ingrese su contraseña actual"
+title="Contraseña actual"
+required>
+
+</div>
+
+<!-- NUEVA PASSWORD -->
+
+<div class="mb-3">
+
+<label for="nuevaPassword" class="form-label">
+Nueva contraseña
+</label>
+
+<input
+id="nuevaPassword"
+type="password"
+class="form-control"
+[(ngModel)]="nuevaPassword"
+name="nuevaPassword"
+placeholder="Ingrese la nueva contraseña"
+title="Nueva contraseña"
+required>
+
+</div>
+
+<!-- CONFIRMAR PASSWORD -->
+
+<div class="mb-3">
+
+<label for="confirmarPassword" class="form-label">
+Confirmar contraseña
+</label>
+
+<input
+id="confirmarPassword"
+type="password"
+class="form-control"
+[(ngModel)]="confirmarPassword"
+name="confirmarPassword"
+placeholder="Confirme la nueva contraseña"
+title="Confirmar contraseña"
+required>
+
+</div>
+
+<button
+type="submit"
+class="btn btn-primary">
+
+<i class="bi bi-shield-lock"></i>
+Actualizar contraseña
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
