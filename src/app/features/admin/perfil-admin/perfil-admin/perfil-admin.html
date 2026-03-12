@@ -1,0 +1,177 @@
+<div class="container py-4">
+
+<h2 class="titulo">
+<i class="bi bi-person-gear"></i>
+Perfil del Administrador
+</h2>
+
+<div class="row">
+
+<!-- FOTO PERFIL -->
+
+<div class="col-md-4 text-center">
+
+<img
+[src]="previewImagen || admin?.imagen || 'assets/img/user.png'"
+class="foto-perfil"
+alt="Foto del administrador"
+title="Foto de perfil del administrador">
+
+<h4 class="mt-3">
+{{admin?.nombre}} {{admin?.apellido}}
+</h4>
+
+<span class="badge bg-danger">
+{{admin?.rol}}
+</span>
+
+<div class="mt-3">
+
+<label class="btn btn-outline-primary btn-sm" title="Cambiar foto de perfil">
+
+<i class="bi bi-camera"></i>
+Cambiar foto
+
+<input
+type="file"
+accept="image/*"
+hidden
+(change)="seleccionarImagen($event)"
+title="Seleccionar imagen">
+
+</label>
+
+</div>
+
+</div>
+
+<!-- DATOS + CONTRASEÑA -->
+
+<div class="col-md-8">
+
+<!-- DATOS ADMIN -->
+
+<div class="card shadow-sm mb-3">
+
+<div class="card-header">
+Datos del administrador
+</div>
+
+<div class="card-body">
+
+<p>
+<strong>Usuario:</strong>
+{{admin?.username}}
+</p>
+
+<p>
+<strong>Email:</strong>
+{{admin?.email}}
+</p>
+
+<p>
+
+<strong>Estado:</strong>
+
+<span *ngIf="admin?.estado === 'ACTIVO'" class="text-success">
+Activo
+</span>
+
+<span *ngIf="admin?.estado === 'INACTIVO'" class="text-danger">
+Inactivo
+</span>
+
+</p>
+
+</div>
+
+</div>
+
+<!-- CAMBIAR CONTRASEÑA -->
+
+<div class="card shadow-sm">
+
+<div class="card-header">
+<i class="bi bi-key"></i>
+Cambiar contraseña
+</div>
+
+<div class="card-body">
+
+<form (ngSubmit)="cambiarPassword()">
+
+<div class="mb-3">
+
+<label for="passwordActualAdmin" class="form-label">
+Contraseña actual
+</label>
+
+<input
+id="passwordActualAdmin"
+name="passwordActualAdmin"
+type="password"
+class="form-control"
+[(ngModel)]="passwordActual"
+placeholder="Ingrese su contraseña actual"
+title="Contraseña actual"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label for="nuevaPasswordAdmin" class="form-label">
+Nueva contraseña
+</label>
+
+<input
+id="nuevaPasswordAdmin"
+name="nuevaPasswordAdmin"
+type="password"
+class="form-control"
+[(ngModel)]="nuevaPassword"
+placeholder="Ingrese la nueva contraseña"
+title="Nueva contraseña"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label for="confirmarPasswordAdmin" class="form-label">
+Confirmar contraseña
+</label>
+
+<input
+id="confirmarPasswordAdmin"
+name="confirmarPasswordAdmin"
+type="password"
+class="form-control"
+[(ngModel)]="confirmarPassword"
+placeholder="Confirme la nueva contraseña"
+title="Confirmar contraseña"
+required>
+
+</div>
+
+<button
+type="submit"
+class="btn btn-danger"
+title="Actualizar contraseña">
+
+<i class="bi bi-shield-lock"></i>
+Actualizar contraseña
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

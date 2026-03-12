@@ -1,1 +1,356 @@
-<p>gestion-libros works!</p>
+<div class="container py-4">
+
+<h2>
+<i class="bi bi-book"></i>
+Gestión de Libros
+</h2>
+
+<!-- FILTROS -->
+
+<div class="row mt-4 mb-3 g-3">
+
+<div class="col-md-4">
+
+<label for="buscarLibro" class="form-label">
+Buscar libro
+</label>
+
+<input
+id="buscarLibro"
+type="text"
+class="form-control"
+placeholder="Buscar libro..."
+[(ngModel)]="busqueda">
+
+</div>
+
+<div class="col-md-3">
+
+<label for="categoriaFiltro" class="form-label">
+Categoría
+</label>
+
+<select
+id="categoriaFiltro"
+class="form-select"
+[(ngModel)]="categoriaFiltro">
+
+<option value="">Todas</option>
+<option value="Programación">Programación</option>
+<option value="Base de datos">Base de datos</option>
+<option value="Redes">Redes</option>
+
+</select>
+
+</div>
+
+<div class="col-md-2 d-flex align-items-end">
+
+<button
+class="btn btn-success w-100"
+data-bs-toggle="modal"
+data-bs-target="#modalLibro"
+(click)="abrirNuevoLibro()">
+
+<i class="bi bi-plus-circle"></i>
+Nuevo
+
+</button>
+
+</div>
+
+</div>
+
+<!-- TABLA -->
+
+<div class="table-responsive">
+
+<table class="table table-striped table-hover">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Imagen</th>
+<th>Título</th>
+<th>Autor</th>
+<th>Categoría</th>
+<th>Estado</th>
+<th>Acciones</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr
+*ngFor="let libro of librosFiltrados()"
+(click)="verDetalles(libro)"
+style="cursor:pointer">
+
+<td>{{ libro.id }}</td>
+
+<td>
+
+<img
+[src]="libro.imagen || 'assets/img/libro-default.png'"
+alt="Libro"
+width="50"
+class="rounded shadow-sm">
+
+</td>
+
+<td>{{ libro.titulo }}</td>
+<td>{{ libro.autor }}</td>
+<td>{{ libro.categoria }}</td>
+
+<td>
+
+<span
+class="badge"
+[ngClass]="{
+'bg-success': libro.estado === 'Disponible',
+'bg-danger': libro.estado === 'Prestado',
+'bg-warning': libro.estado === 'Reservado'
+}">
+
+{{ libro.estado }}
+
+</span>
+
+</td>
+
+<td>
+
+<button
+class="btn btn-sm btn-primary me-2"
+data-bs-toggle="modal"
+data-bs-target="#modalLibro"
+(click)="editarLibro(libro); $event.stopPropagation()"
+title="Editar libro">
+
+<i class="bi bi-pencil"></i>
+
+</button>
+
+<button
+class="btn btn-sm btn-danger"
+(click)="eliminarLibro(libro.id); $event.stopPropagation()"
+title="Eliminar libro">
+
+<i class="bi bi-trash"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- MODAL CREAR / EDITAR -->
+
+<div class="modal fade" id="modalLibro" tabindex="-1">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+
+{{ libroSeleccionado?.id ? 'Editar libro' : 'Nuevo libro' }}
+
+</h5>
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="modal"
+aria-label="Cerrar">
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<!-- TITULO -->
+
+<div class="mb-3">
+
+<label for="tituloLibro" class="form-label">
+Título
+</label>
+
+<input
+id="tituloLibro"
+type="text"
+class="form-control"
+placeholder="Ingrese el título del libro"
+[(ngModel)]="libroSeleccionado.titulo">
+
+</div>
+
+<!-- AUTOR -->
+
+<div class="mb-3">
+
+<label for="autorLibro" class="form-label">
+Autor
+</label>
+
+<input
+id="autorLibro"
+type="text"
+class="form-control"
+placeholder="Nombre del autor"
+[(ngModel)]="libroSeleccionado.autor">
+
+</div>
+
+<!-- CATEGORIA -->
+
+<div class="mb-3">
+
+<label for="categoriaLibro" class="form-label">
+Categoría
+</label>
+
+<select
+id="categoriaLibro"
+class="form-select"
+[(ngModel)]="libroSeleccionado.categoria">
+
+<option value="Programación">Programación</option>
+<option value="Base de datos">Base de datos</option>
+<option value="Redes">Redes</option>
+
+</select>
+
+</div>
+
+<!-- ESTADO -->
+
+<div class="mb-3">
+
+<label for="estadoLibro" class="form-label">
+Estado
+</label>
+
+<select
+id="estadoLibro"
+class="form-select"
+[(ngModel)]="libroSeleccionado.estado">
+
+<option value="Disponible">Disponible</option>
+<option value="Prestado">Prestado</option>
+<option value="Reservado">Reservado</option>
+
+</select>
+
+</div>
+
+<!-- STOCK -->
+
+<div class="mb-3">
+
+<label for="stockLibro" class="form-label">
+Stock
+</label>
+
+<input
+id="stockLibro"
+type="number"
+class="form-control"
+placeholder="Cantidad disponible"
+[(ngModel)]="libroSeleccionado.stock">
+
+</div>
+
+</div>
+
+<div class="modal-footer">
+
+<button
+type="button"
+class="btn btn-secondary"
+data-bs-dismiss="modal">
+
+Cancelar
+
+</button>
+
+<button
+type="button"
+class="btn btn-success"
+(click)="guardarLibro()"
+data-bs-dismiss="modal">
+
+Guardar
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MODAL DETALLES -->
+
+<div class="modal fade" id="modalDetalles" tabindex="-1">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+Detalle del Libro
+</h5>
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="modal"
+aria-label="Cerrar">
+</button>
+
+</div>
+
+<div class="modal-body">
+
+<p><b>Título:</b> {{ libroDetalle?.titulo }}</p>
+<p><b>Autor:</b> {{ libroDetalle?.autor }}</p>
+<p><b>Categoría:</b> {{ libroDetalle?.categoria }}</p>
+<p><b>Estado:</b> {{ libroDetalle?.estado }}</p>
+
+<div *ngIf="libroDetalle?.estado !== 'Disponible'">
+
+<hr>
+
+<p><b>Prestado a:</b> {{ libroDetalle?.usuario }}</p>
+<p><b>Fecha préstamo:</b> {{ libroDetalle?.fechaPrestamo }}</p>
+<p><b>Fecha devolución:</b> {{ libroDetalle?.fechaDevolucion }}</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

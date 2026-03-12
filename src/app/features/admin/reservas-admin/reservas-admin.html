@@ -1,0 +1,280 @@
+<div class="container py-4">
+
+<h2>
+<i class="bi bi-bookmark"></i>
+Gestión de Reservas
+</h2>
+
+<!-- BOTON NUEVA RESERVA -->
+
+<div class="d-flex justify-content-end mt-3 mb-3">
+
+<button
+class="btn btn-success"
+(click)="abrirNuevaReserva()"
+data-bs-toggle="modal"
+data-bs-target="#modalReserva"
+title="Registrar nueva reserva"
+aria-label="Registrar nueva reserva">
+
+<i class="bi bi-plus-circle"></i>
+Nueva reserva
+
+</button>
+
+</div>
+
+<!-- TABLA -->
+
+<div class="table-responsive">
+
+<table class="table table-striped table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+<th>Usuario</th>
+<th>Tipo</th>
+<th>Libro</th>
+<th>Fecha reserva</th>
+<th>Estado</th>
+<th>Acciones</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr *ngFor="let reserva of reservas">
+
+<td>{{ reserva.id }}</td>
+
+<td>{{ reserva.usuario }}</td>
+
+<td>
+
+<span
+class="badge"
+[ngClass]="{
+'bg-primary': reserva.tipoUsuario === 'ESTUDIANTE',
+'bg-success': reserva.tipoUsuario === 'DOCENTE'
+}">
+
+{{ reserva.tipoUsuario }}
+
+</span>
+
+</td>
+
+<td>{{ reserva.libro }}</td>
+
+<td>{{ reserva.fecha }}</td>
+
+<td>
+
+<span
+class="badge"
+[ngClass]="{
+'bg-warning': reserva.estado === 'Pendiente',
+'bg-success': reserva.estado === 'Aprobada',
+'bg-danger': reserva.estado === 'Cancelada'
+}">
+
+{{ reserva.estado }}
+
+</span>
+
+</td>
+
+<td>
+
+<button
+class="btn btn-sm btn-primary me-2"
+(click)="editarReserva(reserva)"
+data-bs-toggle="modal"
+data-bs-target="#modalReserva"
+title="Editar reserva"
+aria-label="Editar reserva">
+
+<i class="bi bi-pencil"></i>
+
+</button>
+
+<button
+class="btn btn-sm btn-success me-2"
+(click)="aprobarReserva(reserva)"
+title="Aprobar reserva"
+aria-label="Aprobar reserva">
+
+<i class="bi bi-check-circle"></i>
+
+</button>
+
+<button
+class="btn btn-sm btn-danger"
+(click)="eliminarReserva(reserva.id)"
+title="Cancelar reserva"
+aria-label="Cancelar reserva">
+
+<i class="bi bi-x-circle"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- MODAL -->
+
+<div
+class="modal fade"
+id="modalReserva"
+tabindex="-1">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<!-- HEADER -->
+
+<div class="modal-header">
+
+<h5 class="modal-title">
+<i class="bi bi-bookmark"></i>
+Registrar Reserva
+</h5>
+
+<button
+class="btn-close"
+data-bs-dismiss="modal"
+title="Cerrar"
+aria-label="Cerrar">
+</button>
+
+</div>
+
+<!-- BODY -->
+
+<div class="modal-body">
+
+<div class="mb-3">
+
+<label for="usuarioReserva" class="form-label">
+Usuario
+</label>
+
+<select
+id="usuarioReserva"
+name="usuarioReserva"
+class="form-select"
+[(ngModel)]="reservaSeleccionada.usuarioId"
+title="Seleccionar usuario">
+
+<option *ngFor="let u of usuarios" [value]="u.id">
+{{ u.nombre }} - {{ u.rol }}
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label for="libroReserva" class="form-label">
+Libro
+</label>
+
+<select
+id="libroReserva"
+name="libroReserva"
+class="form-select"
+[(ngModel)]="reservaSeleccionada.libroId"
+title="Seleccionar libro">
+
+<option *ngFor="let l of libros" [value]="l.id">
+{{ l.titulo }}
+</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label for="fechaReserva" class="form-label">
+Fecha reserva
+</label>
+
+<input
+id="fechaReserva"
+name="fechaReserva"
+type="date"
+class="form-control"
+[(ngModel)]="reservaSeleccionada.fecha"
+title="Seleccionar fecha de reserva">
+
+</div>
+
+<div class="mb-3">
+
+<label for="estadoReserva" class="form-label">
+Estado
+</label>
+
+<select
+id="estadoReserva"
+name="estadoReserva"
+class="form-select"
+[(ngModel)]="reservaSeleccionada.estado"
+title="Seleccionar estado">
+
+<option>Pendiente</option>
+<option>Aprobada</option>
+<option>Cancelada</option>
+
+</select>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="modal-footer">
+
+<button
+class="btn btn-secondary"
+data-bs-dismiss="modal"
+title="Cancelar">
+
+Cancelar
+
+</button>
+
+<button
+class="btn btn-success"
+(click)="guardarReserva()"
+title="Guardar reserva">
+
+Guardar
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

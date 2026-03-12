@@ -1,0 +1,154 @@
+<nav class="navbar navbar-expand-lg navbar-admin">
+
+  <div class="container">
+
+    <!-- Logo -->
+    <a
+      class="navbar-brand"
+      routerLink="/admin/dashboard"
+      title="Ir al dashboard">
+
+      <i class="bi bi-speedometer2"></i>
+      Panel Admin
+
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#menuAdmin"
+      title="Abrir menú">
+
+      Menu
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+    <div class="collapse navbar-collapse" id="menuAdmin">
+
+      <!-- MENU PRINCIPAL -->
+
+      <ul class="navbar-nav me-auto">
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin/dashboard"
+            title="Ir al dashboard">
+
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin/usuarios"
+            title="Gestionar usuarios">
+
+            <i class="bi bi-people"></i>
+            Usuarios
+
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin/libros"
+            title="Gestionar libros">
+
+            <i class="bi bi-book"></i>
+            Libros
+
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin/prestamos"
+            title="Gestionar préstamos">
+
+            <i class="bi bi-clock-history"></i>
+            Préstamos
+
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/admin/reservas"
+            title="Gestionar reservas">
+
+            <i class="bi bi-bookmark"></i>
+            Reservas
+
+          </a>
+        </li>
+
+      </ul>
+
+      <!-- MENU USUARIO -->
+
+      <ul class="navbar-nav">
+
+        <li class="nav-item dropdown">
+
+          <a
+            class="nav-link dropdown-toggle"
+            data-bs-toggle="dropdown"
+            title="Opciones del administrador">
+
+            <i class="bi bi-person-circle"></i>
+            Admin
+
+          </a>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+
+            <li>
+
+              <a
+                class="dropdown-item"
+                routerLink="/admin/perfil"
+                title="Ver perfil del administrador">
+
+                <i class="bi bi-person"></i>
+                Mi perfil
+
+              </a>
+
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+
+              <button
+                class="dropdown-item text-danger"
+                (click)="cerrarSesion()"
+                title="Cerrar sesión">
+
+                <i class="bi bi-box-arrow-right"></i>
+                Cerrar sesión
+
+              </button>
+
+            </li>
+
+          </ul>
+
+        </li>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</nav>
