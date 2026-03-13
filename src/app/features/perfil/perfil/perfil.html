@@ -1,181 +1,122 @@
 <div class="container py-4">
 
-<h2 class="titulo">
-<i class="bi bi-person-circle"></i>
-Mi Perfil
-</h2>
+  <h2 class="titulo">
+    <i class="bi bi-person-circle"></i> Mi Perfil
+  </h2>
 
-<div class="row">
+  <div class="row" *ngIf="usuario">
 
-<!-- FOTO PERFIL -->
+    <!-- FOTO PERFIL -->
+    <div class="col-md-4 text-center">
+      <img
+        [src]="previewImagen || usuario.imagen || 'assets/img/user.png'"
+        class="foto-perfil"
+        alt="Foto del usuario"
+      >
 
-<div class="col-md-4 text-center">
+      <h4 class="mt-3">{{ usuario.nombre }} {{ usuario.apellido }}</h4>
 
-<img
-[src]="previewImagen || usuario?.imagen || 'assets/img/user.png'"
-class="foto-perfil"
-alt="Foto del usuario"
-title="Foto de perfil">
+      <span class="badge bg-primary">{{ usuario.rol }}</span>
 
-<h4 class="mt-3">
-{{usuario?.nombre}} {{usuario?.apellido}}
-</h4>
+      <div class="mt-3">
+        <label class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-camera"></i> Cambiar foto
+          <input type="file" accept="image/*" hidden (change)="seleccionarImagen($event)">
+        </label>
+      </div>
+    </div>
 
-<span class="badge bg-primary">
-{{usuario?.rol}}
-</span>
+    <!-- DATOS + CONTRASEÑA -->
+    <div class="col-md-8">
 
-<div class="mt-3">
+      <!-- DATOS USUARIO -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-header">Datos del usuario</div>
+        <div class="card-body">
 
-<label class="btn btn-outline-primary btn-sm">
+          <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+          <p><strong>Email:</strong> {{ usuario.email }}</p>
+          <p>
+            <strong>Estado:</strong>
+            <span [class]="usuario.estado === 'ACTIVO' ? 'text-success' : 'text-danger'">
+              {{ usuario.estado === 'ACTIVO' ? 'Activo' : 'Inactivo' }}
+            </span>
+          </p>
 
-<i class="bi bi-camera"></i>
-Cambiar foto
+        </div>
+      </div>
 
-<input
-type="file"
-accept="image/*"
-hidden
-(change)="seleccionarImagen($event)">
+      <!-- CAMBIAR CONTRASEÑA -->
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <i class="bi bi-key"></i> Cambiar contraseña
+        </div>
+        <div class="card-body">
 
-</label>
+          <form (ngSubmit)="cambiarPassword()" #formPassword="ngForm">
 
-</div>
+            <div class="mb-3">
+              <label class="form-label">Contraseña actual</label>
+              <input
+                type="password"
+                class="form-control"
+                [(ngModel)]="passwordActual"
+                name="passwordActual"
+                placeholder="Ingrese su contraseña actual"
+                required
+              >
+            </div>
 
-</div>
+            <div class="mb-3">
+              <label class="form-label">Nueva contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                [(ngModel)]="nuevaPassword"
+                name="nuevaPassword"
+                placeholder="Mínimo 6 caracteres"
+                required
+              >
+            </div>
 
-<!-- DATOS + CONTRASEÑA -->
+            <div class="mb-3">
+              <label class="form-label">Confirmar contraseña</label>
+              <input
+                type="password"
+                class="form-control"
+                [(ngModel)]="confirmarPassword"
+                name="confirmarPassword"
+                placeholder="Repita la nueva contraseña"
+                required
+              >
+            </div>
 
-<div class="col-md-8">
+            <!-- ERROR -->
+            <div class="alert alert-danger py-2" *ngIf="errorPassword">
+              {{ errorPassword }}
+            </div>
 
-<!-- DATOS USUARIO -->
+            <!-- ÉXITO -->
+            <div class="alert alert-success py-2" *ngIf="exitoPassword">
+              <i class="bi bi-check-circle"></i> Contraseña actualizada correctamente
+            </div>
 
-<div class="card shadow-sm mb-3">
+            <button type="submit" class="btn btn-primary" [disabled]="cargando">
+              <i class="bi bi-shield-lock"></i>
+              {{ cargando ? 'Actualizando...' : 'Actualizar contraseña' }}
+            </button>
 
-<div class="card-header">
-Datos del usuario
-</div>
+          </form>
+        </div>
+      </div>
 
-<div class="card-body">
+    </div>
+  </div>
 
-<p>
-<strong>Usuario:</strong>
-{{usuario?.username}}
-</p>
-
-<p>
-<strong>Email:</strong>
-{{usuario?.email}}
-</p>
-
-<p>
-
-<strong>Estado:</strong>
-
-<span *ngIf="usuario?.estado === 'ACTIVO'" class="text-success">
-Activo
-</span>
-
-<span *ngIf="usuario?.estado === 'INACTIVO'" class="text-danger">
-Inactivo
-</span>
-
-</p>
-
-</div>
-
-</div>
-
-<!-- CAMBIAR CONTRASEÑA -->
-
-<div class="card shadow-sm">
-
-<div class="card-header">
-<i class="bi bi-key"></i>
-Cambiar contraseña
-</div>
-
-<div class="card-body">
-
-<form (ngSubmit)="cambiarPassword()">
-
-<!-- PASSWORD ACTUAL -->
-
-<div class="mb-3">
-
-<label for="passwordActual" class="form-label">
-Contraseña actual
-</label>
-
-<input
-id="passwordActual"
-type="password"
-class="form-control"
-[(ngModel)]="passwordActual"
-name="passwordActual"
-placeholder="Ingrese su contraseña actual"
-title="Contraseña actual"
-required>
-
-</div>
-
-<!-- NUEVA PASSWORD -->
-
-<div class="mb-3">
-
-<label for="nuevaPassword" class="form-label">
-Nueva contraseña
-</label>
-
-<input
-id="nuevaPassword"
-type="password"
-class="form-control"
-[(ngModel)]="nuevaPassword"
-name="nuevaPassword"
-placeholder="Ingrese la nueva contraseña"
-title="Nueva contraseña"
-required>
-
-</div>
-
-<!-- CONFIRMAR PASSWORD -->
-
-<div class="mb-3">
-
-<label for="confirmarPassword" class="form-label">
-Confirmar contraseña
-</label>
-
-<input
-id="confirmarPassword"
-type="password"
-class="form-control"
-[(ngModel)]="confirmarPassword"
-name="confirmarPassword"
-placeholder="Confirme la nueva contraseña"
-title="Confirmar contraseña"
-required>
-
-</div>
-
-<button
-type="submit"
-class="btn btn-primary">
-
-<i class="bi bi-shield-lock"></i>
-Actualizar contraseña
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+  <!-- CARGANDO -->
+  <div class="text-center py-5" *ngIf="!usuario">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Cargando perfil...</p>
+  </div>
 
 </div>

@@ -1,181 +1,119 @@
 <div class="container py-4">
 
-<h2 class="titulo">
-<i class="bi bi-speedometer2"></i>
-Panel Administrador
-</h2>
+  <h2 class="titulo">
+    <i class="bi bi-speedometer2"></i> Panel Administrador
+  </h2>
 
-<!-- TARJETAS -->
+  <!-- TARJETAS -->
+  <div class="row text-center mt-4">
 
-<div class="row text-center mt-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm tarjeta">
+        <div class="card-body">
+          <i class="bi bi-book icono text-success"></i>
+          <h3>{{ totalLibros }}</h3>
+          <p>Libros totales</p>
+        </div>
+      </div>
+    </div>
 
-<div class="col-md-3 col-sm-6 mb-3">
-<div class="card shadow-sm tarjeta">
-<div class="card-body">
-<i class="bi bi-book icono text-success"></i>
-<h3>{{totalLibros}}</h3>
-<p>Libros totales</p>
-</div>
-</div>
-</div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm tarjeta">
+        <div class="card-body">
+          <i class="bi bi-arrow-left-right icono text-danger"></i>
+          <h3>{{ librosPrestados }}</h3>
+          <p>Libros prestados</p>
+        </div>
+      </div>
+    </div>
 
-<div class="col-md-3 col-sm-6 mb-3">
-<div class="card shadow-sm tarjeta">
-<div class="card-body">
-<i class="bi bi-arrow-left-right icono text-danger"></i>
-<h3>{{librosPrestados}}</h3>
-<p>Libros prestados</p>
-</div>
-</div>
-</div>
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm tarjeta">
+        <div class="card-body">
+          <i class="bi bi-bookmark icono text-warning"></i>
+          <h3>{{ reservasActivas }}</h3>
+          <p>Reservas activas</p>
+        </div>
+      </div>
+    </div>
 
-<div class="col-md-3 col-sm-6 mb-3">
-<div class="card shadow-sm tarjeta">
-<div class="card-body">
-<i class="bi bi-bookmark icono text-warning"></i>
-<h3>{{reservasActivas}}</h3>
-<p>Reservas activas</p>
-</div>
-</div>
-</div>
-
-<div class="col-md-3 col-sm-6 mb-3">
-<div class="card shadow-sm tarjeta">
-<div class="card-body">
-<i class="bi bi-people icono text-primary"></i>
-<h3>{{totalUsuarios}}</h3>
-<p>Usuarios registrados</p>
-</div>
-</div>
-</div>
-
-</div>
-
-<!-- FILTROS Y BUSQUEDA -->
-
-<div class="row mt-4 mb-3 g-3 align-items-end">
-
-  <!-- BUSCAR -->
-
-  <div class="col-md-4">
-
-    <label for="buscar" class="form-label">
-      Buscar
-    </label>
-
-    <input
-      id="buscar"
-      type="text"
-      class="form-control"
-      placeholder="Buscar libro, usuario..."
-    >
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm tarjeta">
+        <div class="card-body">
+          <i class="bi bi-people icono text-primary"></i>
+          <h3>{{ totalUsuarios }}</h3>
+          <p>Usuarios registrados</p>
+        </div>
+      </div>
+    </div>
 
   </div>
 
-  <!-- FILTRO PERIODO -->
+  <!-- FILTROS -->
+  <div class="row mt-4 mb-3 g-3 align-items-end">
 
-  <div class="col-md-3">
+    <div class="col-md-4">
+      <label for="buscar" class="form-label">Buscar</label>
+      <input id="buscar" type="text" class="form-control" placeholder="Buscar libro, usuario...">
+    </div>
 
-    <label for="filtroPeriodo" class="form-label">
-      Periodo
-    </label>
+    <div class="col-md-3">
+      <label for="filtroPeriodo" class="form-label">Periodo</label>
+      <select id="filtroPeriodo" class="form-select">
+        <option>Este año</option>
+        <option>Últimos 6 meses</option>
+        <option>Últimos 3 meses</option>
+      </select>
+    </div>
 
-    <select id="filtroPeriodo" class="form-select">
-      <option>Este año</option>
-      <option>Últimos 6 meses</option>
-      <option>Últimos 3 meses</option>
-    </select>
+    <div class="col-md-3">
+      <label for="filtroCategoria" class="form-label">Categoría</label>
+      <select id="filtroCategoria" class="form-select">
+        <option>Todas las categorías</option>
+        <option>Programación</option>
+        <option>Base de datos</option>
+        <option>Redes</option>
+      </select>
+    </div>
 
-  </div>
-
-  <!-- FILTRO CATEGORIA -->
-
-  <div class="col-md-3">
-
-    <label for="filtroCategoria" class="form-label">
-      Categoría
-    </label>
-
-    <select id="filtroCategoria" class="form-select">
-      <option>Todas las categorías</option>
-      <option>Programación</option>
-      <option>Base de datos</option>
-      <option>Redes</option>
-    </select>
-
-  </div>
-
-  <!-- BOTON FILTRAR -->
-
-  <div class="col-md-2">
-
-    <button class="btn btn-primary w-100">
-      <i class="bi bi-search"></i>
-      Filtrar
-    </button>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100">
+        <i class="bi bi-search"></i> Filtrar
+      </button>
+    </div>
 
   </div>
 
-</div>
+  <!-- GRÁFICOS -->
+  <div class="row">
 
-<!-- GRAFICOS -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header">Inventario de libros</div>
+        <div class="card-body">
+          <canvas id="graficoLibros"></canvas>
+        </div>
+      </div>
+    </div>
 
-<div class="row">
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header">Usuarios por rol</div>
+        <div class="card-body">
+          <canvas id="graficoUsuarios"></canvas>
+        </div>
+      </div>
+    </div>
 
-<!-- INVENTARIO -->
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-header">Préstamos por mes</div>
+        <div class="card-body">
+          <canvas id="graficoPrestamos"></canvas>
+        </div>
+      </div>
+    </div>
 
-<div class="col-md-4 mb-3">
-
-<div class="card shadow-sm">
-
-<div class="card-header">
-Inventario de libros
-</div>
-
-<div class="card-body">
-<canvas id="graficoLibros"></canvas>
-</div>
-
-</div>
-
-</div>
-
-<!-- USUARIOS -->
-
-<div class="col-md-4 mb-3">
-
-<div class="card shadow-sm">
-
-<div class="card-header">
-Usuarios por rol
-</div>
-
-<div class="card-body">
-<canvas id="graficoUsuarios"></canvas>
-</div>
-
-</div>
-
-</div>
-
-<!-- PRESTAMOS -->
-
-<div class="col-md-4 mb-3">
-
-<div class="card shadow-sm">
-
-<div class="card-header">
-Préstamos por mes
-</div>
-
-<div class="card-body">
-<canvas id="graficoPrestamos"></canvas>
-</div>
-
-</div>
-
-</div>
-
-</div>
+  </div>
 
 </div>

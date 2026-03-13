@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Prestamo } from '../../../core/models/prestamo.model';
+import { PrestamoService } from '../../../core/services/prestamo';
+import { AuthService } from '../../../core/services/auth';
 
 @Component({
   selector: 'app-historial-prestamos',
@@ -9,39 +11,47 @@ import { Prestamo } from '../../../core/models/prestamo.model';
   templateUrl: './historial-prestamos.component.html',
   styleUrl: './historial-prestamos.component.scss'
 })
-export class HistorialPrestamosComponent {
-
+export class HistorialPrestamosComponent implements OnInit {
   prestamos: Prestamo[] = [];
-
   prestamoSeleccionado?: Prestamo;
+  cargando = false;
+  error = '';
 
-  constructor(){
+  constructor(
+    private prestamoService: PrestamoService,
+    private authService: AuthService
+  ) {}
 
-    this.prestamos = [
-      {
-        id:1,
-        libroId:101,
-        tituloLibro:'Don Quijote',
-        usuarioId:5,
-        fechaPrestamo:'2024-05-01',
-        fechaDevolucion:'2024-05-15',
-        devuelto:true
-      },
-      {
-        id:2,
-        libroId:102,
-        tituloLibro:'Cien años de soledad',
-        usuarioId:5,
-        fechaPrestamo:'2024-06-01',
-        fechaDevolucion:'2024-06-15',
-        devuelto:false
-      }
-    ];
-
+  ngOnInit(): void {
+    this.cargarHistorial();
   }
 
-  abrirDetalle(prestamo: Prestamo){
+  cargarHistorial(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return;
+
+    this.cargando = true;
+    this.prestamoService.getPrestamosPorUsuario(currentUser.id).subscribe({
+      next: (data) => {
+        this.prestamos = data;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = 'Error al cargar el historial';
+        this.cargando = false;
+      }
+    });
+  }
+
+  abrirDetalle(prestamo: Prestamo): void {
     this.prestamoSeleccionado = prestamo;
   }
 
+  getBadgeClass(estado: string): string {
+    switch (estado) {
+      case 'DEVUELTO': return 'bg-success';
+      case 'VENCIDO':  return 'bg-danger';
+      default:         return 'bg-warning text-dark';
+    }
+  }
 }

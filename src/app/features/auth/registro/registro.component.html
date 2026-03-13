@@ -1,52 +1,101 @@
 <div class="register-container">
-
   <div class="register-card">
 
-    <!-- LADO IZQUIERDO (IMAGEN) -->
+    <!-- IZQUIERDA -->
     <div class="register-left">
       <div class="overlay">
-
         <h2>Bienvenido</h2>
-
-        <p>
-          Si ya tienes una cuenta puedes iniciar sesión
-        </p>
-
-        <button class="btn-login" routerLink="../login/login.component.html">
+        <p>Si ya tienes una cuenta puedes iniciar sesión</p>
+        <button class="btn-login" routerLink="../login">
           Iniciar sesión →
         </button>
-
       </div>
     </div>
 
-    <!-- LADO DERECHO (FORMULARIO) -->
+    <!-- DERECHA -->
     <div class="register-right">
-
       <h2>Crear cuenta</h2>
 
-      <form>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <div class="input-group">
-          <input type="text" placeholder="Nombre completo">
+          <input
+            type="text"
+            placeholder="Nombre"
+            formControlName="nombre"
+            [class.input-error]="form.get('nombre')?.invalid && form.get('nombre')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+            El nombre es requerido
+          </span>
         </div>
 
         <div class="input-group">
-          <input type="email" placeholder="Correo electrónico">
+          <input
+            type="text"
+            placeholder="Apellido"
+            formControlName="apellido"
+            [class.input-error]="form.get('apellido')?.invalid && form.get('apellido')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('apellido')?.invalid && form.get('apellido')?.touched">
+            El apellido es requerido
+          </span>
         </div>
 
         <div class="input-group">
-          <input type="password" placeholder="Contraseña">
+          <input
+            type="email"
+            placeholder="Correo institucional (@unicolombo.edu.co)"
+            formControlName="email"
+            [class.input-error]="form.get('email')?.invalid && form.get('email')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+            Ingresa un correo válido
+          </span>
+          <!-- Badge rol detectado -->
+          <span class="rol-badge" [class.docente]="rolDetectado === 'DOCENTE'">
+            {{ rolDetectado === 'DOCENTE' ? '👨‍🏫 Docente' : '🎓 Estudiante' }}
+          </span>
         </div>
 
+        <div class="input-group">
+          <input
+            type="text"
+            placeholder="Nombre de usuario"
+            formControlName="username"
+            [class.input-error]="form.get('username')?.invalid && form.get('username')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+            Mínimo 3 caracteres
+          </span>
+        </div>
 
-        <button class="btn-register">
-          Registrarse
+        <div class="input-group">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            [class.input-error]="form.get('password')?.invalid && form.get('password')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+            Mínimo 6 caracteres
+          </span>
+        </div>
+
+        <!-- Error general -->
+        <div class="error-general" *ngIf="error">{{ error }}</div>
+
+        <button class="btn-register" type="submit" [disabled]="form.invalid || cargando">
+          {{ cargando ? 'Registrando...' : 'Registrarse' }}
         </button>
 
       </form>
-
     </div>
 
   </div>
-
 </div>

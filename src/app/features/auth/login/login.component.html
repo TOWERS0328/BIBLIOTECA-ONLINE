@@ -1,53 +1,64 @@
 <div class="login-container">
-
   <div class="login-card">
 
     <!-- IZQUIERDA -->
     <div class="login-left">
-
       <h2>Inicia sesión aquí</h2>
 
-      <form>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <div class="input-group">
-          <input type="email" placeholder="Correo electrónico">
+          <input
+            type="text"
+            placeholder="Usuario"
+            formControlName="username"
+            [class.input-error]="form.get('username')?.invalid && form.get('username')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('username')?.invalid && form.get('username')?.touched">
+            El usuario es requerido
+          </span>
         </div>
 
         <div class="input-group">
-          <input type="password" placeholder="Contraseña">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            [class.input-error]="form.get('password')?.invalid && form.get('password')?.touched"
+          >
+          <span class="error-msg"
+            *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+            Mínimo 6 caracteres
+          </span>
         </div>
 
         <div class="options">
           <label>
-            <input type="checkbox"> Recuérdame
+            <input type="checkbox" formControlName="recordarme"> Recuérdame
           </label>
         </div>
 
-        <button class="btn-login" >
-          Iniciar Sesión
+        <!-- Error general -->
+        <div class="error-general" *ngIf="error">{{ error }}</div>
+
+        <button class="btn-login" type="submit" [disabled]="form.invalid || cargando">
+          {{ cargando ? 'Iniciando...' : 'Iniciar Sesión' }}
         </button>
 
       </form>
-
     </div>
 
     <!-- DERECHA -->
     <div class="login-right">
       <div class="overlay">
         <h2>Comienza tu viaje ahora</h2>
-
-        <p>
-          Si aún no tienes una cuenta,
-          únete a nosotros y comienza tu viaje
-        </p>
-
+        <p>Si aún no tienes una cuenta, únete a nosotros y comienza tu viaje</p>
         <button class="btn-register" routerLink="../registro/">
           Registrarse →
         </button>
-
       </div>
     </div>
 
   </div>
-
 </div>

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Libro } from '../../../core/models/libro.model';
+import { LibroService } from '../../../core/services/libro';
 
 @Component({
   selector: 'app-lista-libros',
@@ -11,29 +12,49 @@ import { Libro } from '../../../core/models/libro.model';
   templateUrl: './lista-libros.component.html',
   styleUrls: ['./lista-libros.component.scss']
 })
-export class ListaLibrosComponent {
-
+export class ListaLibrosComponent implements OnInit {
+  libros: Libro[] = [];
+  librosFiltrados: Libro[] = [];
   busqueda = '';
+  cargando = false;
+  error = '';
 
-  libros: Libro[] = [
-    {
-      id:1,
-      titulo:'Clean Code',
-      autor:'Robert C. Martin',
-      editorial:'Prentice Hall',
-      anio:2008,
-      disponible:true,
-      categoria:'Programación'
-    },
-    {
-      id:2,
-      titulo:'Design Patterns',
-      autor:'Erich Gamma',
-      editorial:'Addison-Wesley',
-      anio:1994,
-      disponible:false,
-      categoria:'Ingeniería de Software'
+  constructor(private libroService: LibroService) {}
+
+  ngOnInit(): void {
+    this.cargarLibros();
+  }
+
+  cargarLibros(): void {
+    this.cargando = true;
+    this.libroService.getLibros().subscribe({
+      next: (response) => {
+        this.libros = response.content;
+        this.librosFiltrados = response.content;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = 'Error al cargar los libros';
+        this.cargando = false;
+      }
+    });
+  }
+
+  onBuscar(): void {
+    const texto = this.busqueda.toLowerCase().trim();
+    if (!texto) {
+      this.librosFiltrados = this.libros;
+      return;
     }
-  ];
+    this.librosFiltrados = this.libros.filter(libro =>
+      libro.titulo.toLowerCase().includes(texto) ||
+      libro.autor.toLowerCase().includes(texto) ||
+      libro.genero?.toLowerCase().includes(texto) ||
+      libro.isbn.toLowerCase().includes(texto)
+    );
+  }
 
+  estaDisponible(libro: Libro): boolean {
+    return libro.cantidadDisponible > 0;
+  }
 }

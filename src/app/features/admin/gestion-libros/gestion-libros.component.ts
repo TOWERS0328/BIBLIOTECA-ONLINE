@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Libro } from '../../../core/models/libro.model';
+import { LibroService } from '../../../core/services/libro';
 
-declare var bootstrap:any;
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-gestion-libros',
@@ -10,102 +12,94 @@ declare var bootstrap:any;
   imports: [CommonModule, FormsModule],
   templateUrl: './gestion-libros.component.html'
 })
-export class GestionLibrosComponent {
+export class GestionLibrosComponent implements OnInit {
+  busqueda = '';
+  categoriaFiltro = '';
+  cargando = false;
+  error = '';
 
-busqueda = '';
-categoriaFiltro = '';
+  libros: Libro[] = [];
+  libroSeleccionado: Partial<Libro> = {};
+  libroDetalle?: Libro;
 
-libroSeleccionado:any = {};
-libroDetalle:any = null;
+  constructor(private libroService: LibroService) {}
 
-libros:any[] = [
+  ngOnInit(): void {
+    this.cargarLibros();
+  }
 
-{
-id:1,
-titulo:'Clean Code',
-autor:'Robert Martin',
-categoria:'Programación',
-estado:'Prestado',
-usuario:'Juan Torres',
-fechaPrestamo:'2026-03-01',
-fechaDevolucion:'2026-03-10',
-stock:3,
-imagen:'assets/img/libros/clean-code.jpg'
-},
+  cargarLibros(): void {
+    this.cargando = true;
+    this.libroService.getLibros().subscribe({
+      next: (res) => {
+        this.libros = res.content;
+        this.cargando = false;
+      },
+      error: () => {
+        this.error = 'Error al cargar los libros';
+        this.cargando = false;
+      }
+    });
+  }
 
-{
-id:2,
-titulo:'Angular Pro',
-autor:'John Smith',
-categoria:'Programación',
-estado:'Disponible',
-stock:5,
-imagen:'assets/img/libros/angular.jpg'
-}
+  librosFiltrados(): Libro[] {
+    return this.libros.filter(libro =>
+      libro.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) &&
+      (this.categoriaFiltro ? libro.genero === this.categoriaFiltro : true)
+    );
+  }
 
-];
+  abrirNuevoLibro(): void {
+    this.libroSeleccionado = {
+      titulo: '',
+      autor: '',
+      isbn: '',
+      genero: 'Programación',
+      cantidadDisponible: 1,
+      cantidadTotal: 1,
+      activo: true
+    };
+  }
 
-librosFiltrados(){
+  editarLibro(libro: Libro): void {
+    this.libroSeleccionado = { ...libro };
+  }
 
-return this.libros.filter(libro =>
+  guardarLibro(): void {
+    if (this.libroSeleccionado.id) {
+      // Editar
+      this.libroService.actualizarLibro(
+        this.libroSeleccionado.id,
+        this.libroSeleccionado as Libro
+      ).subscribe({
+        next: () => this.cargarLibros(),
+        error: () => this.error = 'Error al actualizar el libro'
+      });
+    } else {
+      // Crear
+      this.libroService.crearLibro(this.libroSeleccionado as Libro).subscribe({
+        next: () => this.cargarLibros(),
+        error: () => this.error = 'Error al crear el libro'
+      });
+    }
+  }
 
-libro.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) &&
-(this.categoriaFiltro ? libro.categoria === this.categoriaFiltro : true)
+  eliminarLibro(id: number, event: Event): void {
+    event.stopPropagation();
+    if (!confirm('¿Eliminar este libro?')) return;
+    this.libroService.eliminarLibro(id).subscribe({
+      next: () => this.cargarLibros(),
+      error: () => this.error = 'Error al eliminar el libro'
+    });
+  }
 
-);
+  verDetalles(libro: Libro): void {
+    this.libroDetalle = libro;
+    const modal = new bootstrap.Modal(document.getElementById('modalDetalles'));
+    modal.show();
+  }
 
-}
-
-abrirNuevoLibro(){
-
-this.libroSeleccionado = {
-titulo:'',
-autor:'',
-categoria:'Programación',
-estado:'Disponible',
-stock:1
-};
-
-}
-
-editarLibro(libro:any){
-
-this.libroSeleccionado = {...libro};
-
-}
-
-guardarLibro(){
-
-if(this.libroSeleccionado.id){
-
-const index = this.libros.findIndex(l => l.id === this.libroSeleccionado.id);
-this.libros[index] = {...this.libroSeleccionado};
-
-}else{
-
-this.libroSeleccionado.id = this.libros.length + 1;
-this.libros.push({...this.libroSeleccionado});
-
-}
-
-}
-
-eliminarLibro(id:number){
-
-this.libros = this.libros.filter(l => l.id !== id);
-
-}
-
-verDetalles(libro:any){
-
-this.libroDetalle = libro;
-
-const modal = new bootstrap.Modal(
-document.getElementById('modalDetalles')
-);
-
-modal.show();
-
-}
-
+  estaDisponible(libro: Libro): boolean {
+    return libro.cantidadDisponible > 0;
+  }
 }

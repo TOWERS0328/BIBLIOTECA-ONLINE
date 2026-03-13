@@ -1,17 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Admin {
-  id:number;
-  nombre:string;
-  apellido:string;
-  email:string;
-  username:string;
-  rol:string;
-  estado:string;
-  imagen:string;
-}
+import { Usuario } from '../../../../core/models/usuario.model';
+import { UsuarioService } from '../../../../core/services/usuario';
+import { AuthService } from '../../../../core/services/auth';
 
 @Component({
   selector: 'app-perfil-admin',
@@ -20,64 +12,76 @@ interface Admin {
   templateUrl: './perfil-admin.html',
   styleUrl: './perfil-admin.scss'
 })
-export class PerfilAdminComponent {
-
-  admin?: Admin;
-
+export class PerfilAdminComponent implements OnInit {
+  admin?: Usuario;
   passwordActual = '';
   nuevaPassword = '';
   confirmarPassword = '';
-
   previewImagen: string | ArrayBuffer | null = null;
+  cargando = false;
+  errorPassword = '';
+  exitoPassword = false;
 
-  constructor(){
+  constructor(
+    private usuarioService: UsuarioService,
+    private authService: AuthService
+  ) {}
 
-    // Simulación de datos
-    this.admin = {
-      id:1,
-      nombre:'Administrador',
-      apellido:'Sistema',
-      email:'admin@biblioteca.com',
-      username:'admin',
-      rol:'ADMIN',
-      estado:'ACTIVO',
-      imagen:'assets/img/user.png'
-    };
-
+  ngOnInit(): void {
+    this.cargarPerfil();
   }
 
-  cambiarPassword(){
+  cargarPerfil(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return;
 
-    if(this.nuevaPassword !== this.confirmarPassword){
-      alert("Las contraseñas no coinciden");
+    this.usuarioService.getUsuarioById(currentUser.id).subscribe({
+      next: (data) => this.admin = data,
+      error: () => console.error('Error al cargar perfil admin')
+    });
+  }
+
+  cambiarPassword(): void {
+    this.errorPassword = '';
+    this.exitoPassword = false;
+
+    if (this.nuevaPassword !== this.confirmarPassword) {
+      this.errorPassword = 'Las contraseñas no coinciden';
       return;
     }
 
-    console.log("Password actual:",this.passwordActual);
-    console.log("Nueva password:",this.nuevaPassword);
+    if (this.nuevaPassword.length < 6) {
+      this.errorPassword = 'La contraseña debe tener mínimo 6 caracteres';
+      return;
+    }
 
-    alert("Contraseña actualizada correctamente");
-
-    this.passwordActual='';
-    this.nuevaPassword='';
-    this.confirmarPassword='';
+    this.cargando = true;
+    this.usuarioService.cambiarPassword(
+      this.admin!.id,
+      this.passwordActual,
+      this.nuevaPassword
+    ).subscribe({
+      next: () => {
+        this.exitoPassword = true;
+        this.passwordActual = '';
+        this.nuevaPassword = '';
+        this.confirmarPassword = '';
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.errorPassword = err.status === 400
+          ? 'La contraseña actual es incorrecta'
+          : 'Error al actualizar la contraseña';
+        this.cargando = false;
+      }
+    });
   }
 
-  seleccionarImagen(event:any){
-
+  seleccionarImagen(event: any): void {
     const archivo = event.target.files[0];
-
-    if(!archivo){
-      return;
-    }
-
+    if (!archivo) return;
     const reader = new FileReader();
-
-    reader.onload = () => {
-      this.previewImagen = reader.result;
-    };
-
+    reader.onload = () => this.previewImagen = reader.result;
     reader.readAsDataURL(archivo);
   }
-
 }

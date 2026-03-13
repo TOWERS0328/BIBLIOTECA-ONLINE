@@ -1,170 +1,146 @@
 <div class="container py-4">
 
-<h2 class="titulo">
-<i class="bi bi-bookmark"></i>
-Mis Reservas
-</h2>
+  <h2 class="titulo">
+    <i class="bi bi-bookmark"></i> Mis Reservas
+  </h2>
 
-<div class="table-responsive">
+  <!-- CARGANDO -->
+  <div class="text-center py-5" *ngIf="cargando">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Cargando reservas...</p>
+  </div>
 
-<table class="table table-hover">
+  <!-- ERROR -->
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
 
-<thead>
+  <!-- SIN RESERVAS -->
+  <div class="text-center py-5" *ngIf="!cargando && reservas.length === 0 && !error">
+    <i class="bi bi-bookmark fs-1"></i>
+    <p class="mt-2">No tienes reservas registradas</p>
+  </div>
 
-<tr>
-<th>Libro</th>
-<th>Fecha reserva</th>
-<th>Estado</th>
-<th>Detalle</th>
-</tr>
+  <!-- TABLA -->
+  <div class="table-responsive" *ngIf="!cargando && reservas.length > 0">
+    <table class="table table-hover">
 
-</thead>
+      <thead>
+        <tr>
+          <th>Libro</th>
+          <th>Fecha reserva</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
 
-<tbody>
+      <tbody>
+        <tr *ngFor="let r of reservas">
 
-<tr *ngFor="let r of reservas">
+          <td>
+            <i class="bi bi-book"></i> {{ r.libro?.titulo}}
+          </td>
 
-<td>
-<i class="bi bi-book"></i>
-{{ r.tituloLibro }}
-</td>
+          <td>{{ r.fechaReserva }}</td>
 
-<td>{{ r.fechaReserva }}</td>
+          <td>
+            <span class="badge" [ngClass]="getBadgeClass(r.estado)">
+              <i class="bi" [ngClass]="getBadgeIcon(r.estado)"></i>
+              {{ r.estado }}
+            </span>
+          </td>
 
-<td>
+          <td class="d-flex gap-2">
+            <button
+              class="btn btn-sm btn-biblioteca"
+              data-bs-toggle="modal"
+              data-bs-target="#modalReserva"
+              (click)="verDetalle(r)"
+              title="Ver detalle"
+              aria-label="Ver detalle de la reserva">
+              <i class="bi bi-eye"></i>
+            </button>
 
-<span *ngIf="r.estado === 'PENDIENTE'" class="badge bg-warning text-dark">
-<i class="bi bi-clock"></i>
-Pendiente
-</span>
+            <button
+              *ngIf="r.estado === 'PENDIENTE' || r.estado === 'CONFIRMADA'"
+              class="btn btn-sm btn-outline-danger"
+              (click)="cancelarReserva(r.id!)"
+              title="Cancelar reserva"
+              aria-label="Cancelar reserva">
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </td>
 
-<span *ngIf="r.estado === 'CONFIRMADA'" class="badge bg-success">
-<i class="bi bi-check-circle"></i>
-Confirmada
-</span>
+        </tr>
+      </tbody>
 
-<span *ngIf="r.estado === 'CANCELADA'" class="badge bg-danger">
-<i class="bi bi-x-circle"></i>
-Cancelada
-</span>
-
-</td>
-
-<td>
-
-<button
-class="btn btn-sm btn-biblioteca"
-data-bs-toggle="modal"
-data-bs-target="#modalReserva"
-(click)="verDetalle(r)"
-title="Ver detalle de la reserva"
-aria-label="Ver detalle de la reserva">
-
-<i class="bi bi-eye"></i>
-
-</button>
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-</div>
+    </table>
+  </div>
 
 </div>
 
 <!-- MODAL DETALLE -->
-
 <div class="modal fade" id="modalReserva" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
 
-<div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-bookmark"></i> Detalle de la reserva
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+          title="Cerrar">
+        </button>
+      </div>
 
-<div class="modal-content">
+      <div class="modal-body" *ngIf="reservaSeleccionada">
+        <div class="row">
 
-<div class="modal-header">
+          <div class="col-md-4 text-center">
+            <img
+              src="assets/libros/default-book.png"
+              class="img-fluid portada"
+              alt="Portada del libro"
+              title="Portada del libro"
+            >
+          </div>
 
-<h5 class="modal-title">
-<i class="bi bi-bookmark"></i>
-Detalle de la reserva
-</h5>
+          <div class="col-md-8">
+            <h4>{{ reservaSeleccionada.libro?.titulo }}</h4>
+            <hr>
 
-<button
-type="button"
-class="btn-close"
-data-bs-dismiss="modal"
-aria-label="Cerrar"
-title="Cerrar">
-</button>
+            <p><strong>ID reserva:</strong> {{ reservaSeleccionada.id }}</p>
+            <p><strong>ID usuario:</strong> {{ reservaSeleccionada.usuarioId }}</p>
+            <p><strong>Fecha reserva:</strong> {{ reservaSeleccionada.fechaReserva }}</p>
+            <p *ngIf="reservaSeleccionada.fechaExpiracion">
+              <strong>Expira:</strong> {{ reservaSeleccionada.fechaExpiracion }}
+            </p>
 
-</div>
+            <p>
+              <strong>Estado:</strong>
+              <span class="ms-1 badge" [ngClass]="getBadgeClass(reservaSeleccionada.estado)">
+                <i class="bi" [ngClass]="getBadgeIcon(reservaSeleccionada.estado)"></i>
+                {{ reservaSeleccionada.estado }}
+              </span>
+            </p>
 
-<div class="modal-body" *ngIf="reservaSeleccionada">
+            <div class="mt-3"
+              *ngIf="reservaSeleccionada.estado === 'PENDIENTE' || reservaSeleccionada.estado === 'CONFIRMADA'">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                data-bs-dismiss="modal"
+                (click)="cancelarReserva(reservaSeleccionada.id!)"
+                aria-label="Cancelar reserva">
+                <i class="bi bi-x-circle"></i> Cancelar reserva
+              </button>
+            </div>
 
-<div class="row">
+          </div>
+        </div>
+      </div>
 
-<div class="col-md-4 text-center">
-
-<img
-src="assets/libros/default-book.png"
-class="img-fluid portada"
-alt="Portada del libro"
-title="Portada del libro">
-
-</div>
-
-<div class="col-md-8">
-
-<h4>{{ reservaSeleccionada?.tituloLibro }}</h4>
-
-<hr>
-
-<p>
-<strong>ID reserva:</strong>
-{{ reservaSeleccionada?.id }}
-</p>
-
-<p>
-<strong>ID usuario:</strong>
-{{ reservaSeleccionada?.usuarioId }}
-</p>
-
-<p>
-<strong>Fecha reserva:</strong>
-{{ reservaSeleccionada?.fechaReserva }}
-</p>
-
-<p>
-
-<strong>Estado:</strong>
-
-<span *ngIf="reservaSeleccionada?.estado === 'PENDIENTE'" class="text-warning">
-<i class="bi bi-clock"></i>
-Pendiente
-</span>
-
-<span *ngIf="reservaSeleccionada?.estado === 'CONFIRMADA'" class="text-success">
-<i class="bi bi-check-circle"></i>
-Confirmada
-</span>
-
-<span *ngIf="reservaSeleccionada?.estado === 'CANCELADA'" class="text-danger">
-<i class="bi bi-x-circle"></i>
-Cancelada
-</span>
-
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+    </div>
+  </div>
 </div>

@@ -7,31 +7,44 @@
   <!-- BUSCADOR -->
   <div class="row mb-4">
     <div class="col-md-4">
-
       <div class="input-group">
         <span class="input-group-text">
           <i class="bi bi-search"></i>
         </span>
-
         <input
           type="text"
           class="form-control"
-          placeholder="Buscar libro por título..."
+          placeholder="Buscar por título, autor, género o ISBN..."
           [(ngModel)]="busqueda"
+          (ngModelChange)="onBuscar()"
         >
       </div>
-
     </div>
   </div>
 
-  <div class="row g-4">
+  <!-- CARGANDO -->
+  <div class="text-center py-5" *ngIf="cargando">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Cargando libros...</p>
+  </div>
 
-    <div class="col-md-4 col-lg-3" *ngFor="let libro of libros">
+  <!-- ERROR -->
+  <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
 
+  <!-- SIN RESULTADOS -->
+  <div class="text-center py-5" *ngIf="!cargando && librosFiltrados.length === 0 && !error">
+    <i class="bi bi-search fs-1"></i>
+    <p class="mt-2">No se encontraron libros</p>
+  </div>
+
+  <!-- GRID LIBROS -->
+  <div class="row g-4" *ngIf="!cargando && !error">
+    <div class="col-md-4 col-lg-3" *ngFor="let libro of librosFiltrados">
       <div class="card libro-card h-100">
 
-        <!-- ESPACIO PARA IMAGEN -->
-        <div class="portada-libro"></div>
+        <div class="portada-libro">
+          <img *ngIf="libro.portadaUrl" [src]="libro.portadaUrl" [alt]="libro.titulo" class="w-100 h-100 object-fit-cover" alt="">
+        </div>
 
         <div class="card-body">
 
@@ -45,26 +58,26 @@
             <strong>Autor:</strong> {{ libro.autor }}
           </p>
 
-          <p class="card-text mb-1">
+          <p class="card-text mb-1" *ngIf="libro.editorial">
             <i class="bi bi-building"></i>
             <strong>Editorial:</strong> {{ libro.editorial }}
           </p>
 
-          <p class="card-text mb-2">
+          <p class="card-text mb-2" *ngIf="libro.anioPublicacion">
             <i class="bi bi-calendar"></i>
-            <strong>Año:</strong> {{ libro.anio }}
+            <strong>Año:</strong> {{ libro.anioPublicacion }}
           </p>
 
-          <span class="categoria">
-            {{ libro.categoria }}
+          <span class="categoria" *ngIf="libro.genero">
+            {{ libro.genero }}
           </span>
 
-          <p class="mt-2 disponible" *ngIf="libro.disponible">
+          <p class="mt-2 disponible" *ngIf="estaDisponible(libro)">
             <i class="bi bi-check-circle"></i>
-            Disponible
+            Disponible ({{ libro.cantidadDisponible }})
           </p>
 
-          <p class="mt-2 no-disponible" *ngIf="!libro.disponible">
+          <p class="mt-2 no-disponible" *ngIf="!estaDisponible(libro)">
             <i class="bi bi-x-circle"></i>
             No disponible
           </p>
@@ -72,22 +85,13 @@
         </div>
 
         <div class="card-footer bg-transparent border-0">
-
-          <button
-            class="btn btn-biblioteca w-100"
-            [routerLink]="['/libros', libro.id]">
-
-            <i class="bi bi-eye"></i>
-            Ver detalle
-
+          <button class="btn btn-biblioteca w-100" [routerLink]="['/libros', libro.id]">
+            <i class="bi bi-eye"></i> Ver detalle
           </button>
-
         </div>
 
       </div>
-
     </div>
-
   </div>
 
 </div>

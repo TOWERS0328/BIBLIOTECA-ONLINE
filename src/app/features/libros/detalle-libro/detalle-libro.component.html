@@ -1,91 +1,94 @@
 <div class="container py-5">
 
-  <div class="row">
+  <!-- CARGANDO -->
+  <div class="text-center py-5" *ngIf="cargando">
+    <div class="spinner-border" role="status"></div>
+    <p class="mt-2">Cargando libro...</p>
+  </div>
 
-    <!-- Imagen libro -->
+  <!-- ERROR -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+    <button class="btn btn-link p-0 ms-2" (click)="volver()">Volver</button>
+  </div>
+
+  <!-- DETALLE -->
+  <div class="row" *ngIf="!cargando && !error && libro">
+
+    <!-- Imagen -->
     <div class="col-md-4 text-center">
-
       <div class="portada-libro">
-
-        <i class="bi bi-book"></i>
-
+        <img alt=""
+          *ngIf="libro.portadaUrl"
+          [src]="libro.portadaUrl"
+          [alt]="libro.titulo"
+          class="w-100 h-100 object-fit-cover"
+        >
+        <i class="bi bi-book" *ngIf="!libro.portadaUrl"></i>
       </div>
-
     </div>
 
     <!-- Información -->
     <div class="col-md-8">
 
-      <h2 class="titulo-libro">
-
-        {{ libro.titulo }}
-
-      </h2>
+      <h2 class="titulo-libro">{{ libro.titulo }}</h2>
 
       <p>
-
         <i class="bi bi-person"></i>
         <strong>Autor:</strong> {{ libro.autor }}
-
       </p>
 
-      <p>
-
+      <p *ngIf="libro.editorial">
         <i class="bi bi-building"></i>
         <strong>Editorial:</strong> {{ libro.editorial }}
-
       </p>
 
-      <p>
-
+      <p *ngIf="libro.anioPublicacion">
         <i class="bi bi-calendar"></i>
-        <strong>Año:</strong> {{ libro.anio }}
-
+        <strong>Año:</strong> {{ libro.anioPublicacion }}
       </p>
 
       <p>
-
-        <strong>Categoría:</strong>
-
-        <span class="categoria">
-          {{ libro.categoria }}
-        </span>
-
+        <i class="bi bi-upc-scan"></i>
+        <strong>ISBN:</strong> {{ libro.isbn }}
       </p>
 
-      <p *ngIf="libro.disponible" class="disponible">
-
-        <i class="bi bi-check-circle"></i>
-        Disponible
-
+      <p *ngIf="libro.genero">
+        <strong>Género:</strong>
+        <span class="categoria">{{ libro.genero }}</span>
       </p>
 
-      <p *ngIf="!libro.disponible" class="no-disponible">
+      <p>
+        <i class="bi bi-stack"></i>
+        <strong>Disponibles:</strong> {{ libro.cantidadDisponible }} / {{ libro.cantidadTotal }}
+      </p>
 
-        <i class="bi bi-x-circle"></i>
-        No disponible
+      <p class="disponible" *ngIf="estaDisponible()">
+        <i class="bi bi-check-circle"></i> Disponible
+      </p>
 
+      <p class="no-disponible" *ngIf="!estaDisponible()">
+        <i class="bi bi-x-circle"></i> No disponible
       </p>
 
       <hr>
 
       <h5>Descripción</h5>
+      <p class="descripcion">{{ libro.descripcion || 'Sin descripción disponible.' }}</p>
 
-      <p class="descripcion">
-
-        {{ libro.descripcion }}
-
-      </p>
-
-      <button class="btn btn-biblioteca mt-3">
-
-        <i class="bi bi-bookmark-plus"></i>
-        Reservar libro
-
-      </button>
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-outline-secondary" (click)="volver()">
+          <i class="bi bi-arrow-left"></i> Volver
+        </button>
+        <button
+  class="btn btn-biblioteca"
+  [disabled]="!estaDisponible()"
+  (click)="reservar()">
+  <i class="bi bi-bookmark-plus"></i> Reservar libro
+</button>
+      </div>
 
     </div>
-
   </div>
 
 </div>

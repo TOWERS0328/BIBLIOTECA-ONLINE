@@ -1,6 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Reserva, CrearReservaRequest } from '../../../core/models/reserva.model';
+import { Usuario } from '../../../core/models/usuario.model';
+import { Libro } from '../../../core/models/libro.model';
+import { ReservaService } from '../../../core/services/reserva';
+import { UsuarioService } from '../../../core/services/usuario';
+import { LibroService } from '../../../core/services/libro';
 
 @Component({
   selector: 'app-reservas-admin',
@@ -9,83 +15,104 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './reservas-admin.html',
   styleUrl: './reservas-admin.scss'
 })
-export class ReservasAdmin {
+export class ReservasAdmin implements OnInit {
+  reservas: Reserva[] = [];
+  usuarios: Usuario[] = [];
+  libros: Libro[] = [];
+  reservaSeleccionada: Partial<CrearReservaRequest & { id?: number }> = {};
+  cargando = false;
+  error = '';
 
-  reservas: any[] = [];
+  constructor(
+    private reservaService: ReservaService,
+    private usuarioService: UsuarioService,
+    private libroService: LibroService
+  ) {}
 
-  usuarios = [
-    { id: 1, nombre: 'Juan Torres', rol: 'ESTUDIANTE' },
-    { id: 2, nombre: 'Carlos Perez', rol: 'DOCENTE' }
-  ];
+  ngOnInit(): void {
+    this.cargarReservas();
+    this.cargarUsuarios();
+    this.cargarLibros();
+  }
 
-  libros = [
-    { id: 1, titulo: 'Clean Code' },
-    { id: 2, titulo: 'Redes Cisco' }
-  ];
+  cargarReservas(): void {
+    this.cargando = true;
+    this.reservaService.getReservas().subscribe({
+      next: (res) => { this.reservas = res.content; this.cargando = false; },
+      error: () => { this.error = 'Error al cargar reservas'; this.cargando = false; }
+    });
+  }
 
-  reservaSeleccionada: any = {};
+  cargarUsuarios(): void {
+    this.usuarioService.getUsuarios().subscribe({
+      next: (data) => this.usuarios = data
+    });
+  }
 
-  abrirNuevaReserva() {
+  cargarLibros(): void {
+    this.libroService.getLibros().subscribe({
+      next: (res) => this.libros = res.content
+    });
+  }
 
+  abrirNuevaReserva(): void {
     this.reservaSeleccionada = {
-      usuarioId: '',
-      libroId: '',
-      fecha: '',
-      estado: 'Pendiente'
+      usuarioId: undefined,
+      libroId: undefined,
+      observaciones: ''
     };
-
   }
 
-  guardarReserva() {
+  editarReserva(reserva: Reserva): void {
+    this.reservaSeleccionada = {
+      id: reserva.id,
+      usuarioId: reserva.usuarioId,
+      libroId: reserva.libroId,
+      observaciones: reserva.observaciones
+    };
+  }
 
-    if (!this.reservaSeleccionada.id) {
-
-      this.reservaSeleccionada.id = Date.now();
-
-      const usuario = this.usuarios.find(
-        u => u.id == this.reservaSeleccionada.usuarioId
-      );
-
-      const libro = this.libros.find(
-        l => l.id == this.reservaSeleccionada.libroId
-      );
-
-      this.reservaSeleccionada.usuario = usuario?.nombre;
-      this.reservaSeleccionada.tipoUsuario = usuario?.rol;
-      this.reservaSeleccionada.libro = libro?.titulo;
-
-      this.reservas.push({ ...this.reservaSeleccionada });
-
+  guardarReserva(): void {
+    if (this.reservaSeleccionada.id) {
+      // Solo se puede editar observaciones en una reserva existente
+      this.cargarReservas();
     } else {
-
-      const index = this.reservas.findIndex(
-        r => r.id === this.reservaSeleccionada.id
-      );
-
-      this.reservas[index] = { ...this.reservaSeleccionada };
-
+      const request: CrearReservaRequest = {
+        usuarioId: this.reservaSeleccionada.usuarioId!,
+        libroId: this.reservaSeleccionada.libroId!,
+        observaciones: this.reservaSeleccionada.observaciones
+      };
+      this.reservaService.crearReserva(request).subscribe({
+        next: () => this.cargarReservas(),
+        error: () => this.error = 'Error al crear la reserva'
+      });
     }
-
   }
 
-  editarReserva(reserva: any) {
-
-    this.reservaSeleccionada = { ...reserva };
-
+  confirmarReserva(id: number): void {
+    this.reservaService.confirmarReserva(id).subscribe({
+      next: () => this.cargarReservas(),
+      error: () => this.error = 'Error al confirmar la reserva'
+    });
   }
 
-  aprobarReserva(reserva: any) {
-
-    reserva.estado = 'Aprobada';
-
+  cancelarReserva(id: number, event: Event): void {
+    event.stopPropagation();
+    if (!confirm('¿Cancelar esta reserva?')) return;
+    this.reservaService.cancelarReserva(id).subscribe({
+      next: () => this.cargarReservas(),
+      error: () => this.error = 'Error al cancelar la reserva'
+    });
   }
 
-  eliminarReserva(id: number) {
-
-    this.reservas = this.reservas.filter(
-      r => r.id !== id
-    );
-
+  getBadgeEstado(estado: string): string {
+    switch (estado) {
+      case 'PENDIENTE':   return 'bg-warning text-dark';
+      case 'CONFIRMADA':  return 'bg-success';
+      case 'CANCELADA':   return 'bg-danger';
+      case 'COMPLETADA':  return 'bg-primary';
+      case 'EXPIRADA':    return 'bg-secondary';
+      default:            return 'bg-secondary';
+    }
   }
-
 }
